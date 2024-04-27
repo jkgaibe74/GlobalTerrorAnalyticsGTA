@@ -23,10 +23,15 @@ data <- read.csv(system.file("data", "FTerrorData.csv", package = "GlobalTerrorA
 
 
 Explore the various functions provided by the package:
+
 Visualize time series: visualize_timeseries(data)
+
 Convert columns to a single date object: convert_to_date(data)
+
 Count bombing/explosion incidents: count_bombing_explosions(data)
+
 Calculate summary statistics: summary_stats(data$nkill)
+
 Plot type of attacks: plot_attacks(data)
 
 If you need help with the project, you can:
