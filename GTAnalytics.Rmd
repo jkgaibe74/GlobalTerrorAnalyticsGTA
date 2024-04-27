@@ -1,0 +1,145 @@
+---
+title: "Global Terror Analytics"
+author: "Gabriel Angeles"
+date: "2024-04-25"
+output: html_document
+---
+# Global Terrorism Analysis - R Markdown
+
+```{r}
+# Load libraries 
+library(ggplot2)
+library(dplyr)
+
+# Load Data
+gta.df <- read.csv("data/FTerrorData.csv")
+
+```
+
+
+Terrorist Incidents Over Time
+
+```{r}
+
+# Define visualize_timeseries function
+visualize_timeseries <- function(data) {
+  # Load the ggplot2 package
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 package not found. Please install it.")
+  }
+
+  # Convert iyear to a factor to ensure that each year is treated as a separate category
+  data$iyear <- as.factor(data$iyear)
+
+  # Count the number of terrorist incidents for each year
+  incident_counts <- table(data$iyear)
+
+  # Convert the incident counts to a data frame
+  incident_counts_df <- as.data.frame(incident_counts)
+
+  # Rename the columns
+  names(incident_counts_df) <- c("Year", "Incidents")
+
+  # Plot the time series
+  ggplot2::ggplot(incident_counts_df, aes(x = Year, y = Incidents, group = 1)) +
+    ggplot2::geom_line() +
+    ggplot2::labs(title = "Number of Terrorist Incidents Over the Years",
+                  x = "Year",
+                  y = "Number of Incidents") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+}
+
+# Visualize timeseries of incidents using visualize_timeseries function
+visualize_timeseries(gta.df)
+
+
+
+```
+
+
+Date Conversion Converting Date Columns
+
+```{r}
+convert_to_date <- function(data, year_col = "iyear", month_col = "imonth", day_col = "iday") {
+  # Check if required columns exist in the data
+  if (!all(c(year_col, month_col, day_col) %in% names(data))) {
+    stop("Error: Data must contain columns named ", paste(year_col, month_col, day_col, collapse = ", "))
+  }
+
+  # Combine year, month, and day into a character vector
+  date_strings <- paste(data[[year_col]], data[[month_col]], data[[day_col]], sep = "-")
+
+  # Convert the character vector to date objects
+  dates <- as.Date(date_strings, format = "%Y-%m-%d")
+
+  # Return the new date column
+  return(dates)
+}
+
+convert_to_date(gta.df)
+
+```
+
+
+Counting Bombing/Explosion Attacks
+
+```{r}
+
+count_bombing_explosions <- function(data) {
+  # Check if the attacktype1_txt column is available in the dataset
+  if (!"attacktype1_txt" %in% colnames(data)) {
+    stop("Column 'attacktype1_txt' not found in the dataset.")
+  }
+
+  # Count the number of incidents with the attack type "Bombing/Explosion"
+  bombing_explosions_count <- sum(data$attacktype1_txt == "Bombing/Explosion", na.rm = TRUE)
+
+  # Return the count
+  return(bombing_explosions_count)
+}
+
+
+cat("Number of Bombing/Explosion Attacks:", count_bombing_explosions(gta.df))
+
+
+
+```
+
+Summary Statistics (Example)
+
+
+```{r}
+
+summary_stats <- function(x) {
+  stats <- c(
+    Mean = mean(x, na.rm = TRUE),
+    Median = median(x, na.rm = TRUE),
+    SD = sd(x, na.rm = TRUE),
+    Min = min(x, na.rm = TRUE),
+    Max = max(x, na.rm = TRUE)
+  )
+  return(as.data.frame(stats))
+}
+
+print(summary_stats(gta.df$nkill))
+
+```
+
+Plot Types of Attacks Over Time
+```{r}
+
+plot_attacks <- function(data) {
+  data <- data %>%
+    group_by(Year = iyear, `Type of attack` = attacktype1_txt) %>%
+    summarise(`Number of events` = n()) %>%
+    ungroup()
+  
+  ggplot(data = data, aes(x = Year, y = `Number of events`, colour = `Type of attack`)) +
+    geom_line() + geom_point() + theme_bw()
+}
+plot_attacks(gta.df)
+
+```
+
+

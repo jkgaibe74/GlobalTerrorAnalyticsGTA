@@ -1,0 +1,14 @@
+Package: GlobalTerrorAnalyticsGTA
+Type: Package
+Title: Provide Global Terrorism Data Analysis and Visualization
+Version: 0.1.0
+Author: Gabriel Angeles <angeles184@edu.usf>
+Maintainer: Gabriel Angeles <angeles184@edu.usf>
+Description: Provides tools for analyzing global terrorism data, offering trend analysis, and insights. The package utilizes the Global Terrorism Database (GTD) data under the University of Maryland's EULA terms.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Imports: ggplot2, dplyr
+NeedsCompilation: no
+Packaged: 2024-04-26 23:30:23 UTC; Gabby
