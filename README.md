@@ -36,7 +36,7 @@ Plot type of attacks: plot_attacks(data)
 
 If you need help with the project, you can:
 
-Check the .RMD or the HTML file and examples provided in the package.
+Check the .RMD or the HTML file for examples in the package.
 
 
 
